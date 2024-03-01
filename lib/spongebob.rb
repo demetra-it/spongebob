@@ -33,10 +33,11 @@ module Spongebob
       config
     end
 
-    def logger
+    def logger # rubocop:disable Metrics/CyclomaticComplexity
       return @logger if @logger
 
-      @logger = Rails.logger.clone if defined?(Rails)
+      @logger = config.logger
+      @logger ||= Rails.logger.clone if defined?(Rails)
       @logger ||= Fleck.logger.clone if defined?(Fleck)
       @logger ||= Logger.new(File.exist?("/proc/1/fd/1") ? "/proc/1/fd/1" : $stdout)
       @logger.progname = name
@@ -46,7 +47,7 @@ module Spongebob
 
     private
 
-    def generate_config
+    def generate_config # rubocop:disable Metrics/AbcSize
       config = Configatron::RootStore.new
       config.kafka_client = nil
       config.app_name = "MyApp"
@@ -55,6 +56,7 @@ module Spongebob
       config.broadcast_events_topic = Configatron::Dynamic.new { "#{config.events_topic}.broadcast" }
       config.exclusive_events_topic = Configatron::Dynamic.new { "#{config.events_topic}.exclusive" }
       config.producer_delivery_interval = 1
+      config.logger = nil
 
       config
     end

@@ -16,14 +16,14 @@ module Spongebob
   class Error < StandardError; end
 
   class << self
-    attr_reader :config
+    def config
+      @config ||= generate_config
+    end
 
     def configure
-      @config ||= generate_config
-
       raise ArgumentError, "Block is required" unless block_given?
 
-      yield @config
+      yield config
     end
 
     def clone_configs(from_config)

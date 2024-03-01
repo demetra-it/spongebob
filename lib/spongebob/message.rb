@@ -16,7 +16,7 @@ module Spongebob
 
     def inspect
       [
-        "#<Nifi::Message:#{object_id}",
+        "#<#{self.class.name}:#{object_id}",
         "topic=#{topic.inspect}",
         "key=#{key.inspect}",
         "event_type=#{event_type.inspect}",
